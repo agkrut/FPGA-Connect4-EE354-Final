@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 module connect_four (
-		Left, Right, Select,
+		Left, Right, Select, Reset,
 		Clk,                    
 		selected_col
 	);
-	input Left, Right, Select, Clk;
+	input Left, Right, Select, Reset, Clk;
 	output [2:0] selected_col;
 	
 	reg [2:0] selected_col;
@@ -22,8 +22,11 @@ module connect_four (
 	CHECK_C4	= 5'b01000,
 	WIN			= 5'b10000;
 
-	always @(posedge Clk) 
-		begin : STATE_MACHINE
+	always @(posedge Clk, posedge Reset) begin
+		if (Reset) begin
+        	state <= INITIAL;
+		end
+		else begin : STATE_MACHINE
 			(* full_case, parallel_case *)
          	case (state)
          		INITIAL : 
@@ -44,16 +47,13 @@ module connect_four (
          		begin
 	         		if(Select)
 	         			state <= CHECK_MOVE;
-	         		else if(Left)
-	         			begin
-	         			if(selected_col > 0)
+	         		else
+	         		begin
+						if(Left & !Right & (selected_col > 0))
 	         				selected_col <= selected_col - 1;
-	         			end
-	         		else if(Right)
-	         			begin
-	         			if(selected_col < 6)
-	         				selected_col <= selected_col + 1;
-	         			end
+						if(Right & !Left & (selected_col < 6))
+							selected_col <= selected_col + 1;
+	         		end
          		end
          		CHECK_MOVE :
          		begin
@@ -77,4 +77,5 @@ module connect_four (
 				end
          	endcase
 		end
+	end
 endmodule

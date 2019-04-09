@@ -3,13 +3,14 @@ module connect_four_top (
 		MemOE, MemWR, RamCS, FlashCS, QuadSpiFlashCS, // Disable the three memory chips
 		ClkPort,              // the 100 MHz incoming clock signal
 		Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0, //LEDs to show selected location
-		BtnL, BtnR, BtnC      // the Left, Right, and Center buttons
+		An0, An1, An2, An3, //Disable SSD anodes
+		BtnU, BtnL, BtnR, BtnC      // the Left, Right, and Center buttons
 	);
 
 	/* INPUT */
 	// Clock & Reset I/O
 	input		ClkPort;
-	input BtnL, BtnR, BtnC;
+	input BtnL, BtnR, BtnC, BtnU;
 
 	/* OUTPUT */
 	// Control signals on Memory chips 	(to disable them)
@@ -17,6 +18,8 @@ module connect_four_top (
 	assign {MemOE, MemWR, RamCS, FlashCS, QuadSpiFlashCS} = 5'b11111;
 
 	output 	Ld0, Ld1, Ld2, Ld3, Ld4, Ld5, Ld6;
+	output 	An0, An1, An2, An3;
+	assign {An0, An1, An2, An3} = 4'b1111;
 
 	wire		Reset, ClkPort;
 	wire		board_clk, sys_clk;
@@ -38,12 +41,16 @@ module connect_four_top (
 		DIV_CLK <= DIV_CLK + 1'b1;
     end
 
-    assign	sys_clk = DIV_CLK[25]; // DIV_CLK[25] (~1.5Hz) = (100MHz / 2**26)
+    assign	sys_clk = DIV_CLK[23];
 
     assign Left = BtnL;
     assign Right = BtnR;
     assign Select = BtnC;
-    connect_four connect_four_mod(.Left(Left), .Right(Right), .Select(Select), .Clk(sys_clk), .selected_col(selected_col));
+	assign Reset = BtnU;
+    connect_four connect_four_mod(
+		.Left(Left), .Right(Right), .Select(Select), .Reset(Reset),
+		.Clk(sys_clk), .selected_col(selected_col)
+	);
 
     assign Ld6 = (selected_col == 0);
     assign Ld5 = (selected_col == 1);
