@@ -1,0 +1,144 @@
+`timescale 1ns / 1ps
+module connect_four_top (
+        MemOE, MemWR, RamCS, FlashCS, QuadSpiFlashCS, // Disable the three memory chips
+        ClkPort,              // the 100 MHz incoming clock signal
+        Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0, //LEDs to show selected location
+        An3, An2, An1, An0,
+        Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp,
+        Sw5, Sw4, Sw3, Sw2, Sw1, Sw0,
+        BtnU, BtnL, BtnR, BtnC      // the Left, Right, and Center buttons
+    );
+
+    /* INPUT */
+    // Clock & Reset I/O
+    input ClkPort;
+    input BtnL, BtnR, BtnC, BtnU;
+    input Sw5, Sw4, Sw3, Sw2, Sw1, Sw0;
+
+    /* OUTPUT */
+    // Control signals on Memory chips  (to disable them)
+    output  MemOE, MemWR, RamCS, FlashCS, QuadSpiFlashCS;
+    assign {MemOE, MemWR, RamCS, FlashCS, QuadSpiFlashCS} = 5'b11111;
+
+    output Ld6, Ld5, Ld4, Ld3, Ld2, Ld1, Ld0;
+    output An3, An2, An1, An0;
+    output Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp;
+
+    wire Reset, ClkPort;
+    wire board_clk, sys_clk;
+    wire [1:0] ssdscan_clk;
+    reg [26:0]  DIV_CLK;
+
+    wire Left, Right, Select;
+    wire [41:0] board;
+    wire [41:0] colors;
+    wire [2:0] selected_col;
+
+    wire [5:0]  SWITCHES;
+    reg [2:0]   SELECTED_ROW;
+    reg [3:0]   SSD;
+    reg [3:0]  SSD3, SSD2, SSD1, SSD0;
+    reg [6:0]   SSD_CATHODES;
+
+    /*
+        Divide the clock
+    */
+    BUFGP BUFGP1 (board_clk, ClkPort);  
+    always @(posedge board_clk, posedge Reset)  
+    begin                           
+        if (Reset)
+            DIV_CLK <= 0;
+        else
+            DIV_CLK <= DIV_CLK + 1'b1;
+    end
+
+    /*
+    Create connect four module
+    */
+    assign sys_clk = DIV_CLK[25];
+    assign Left = BtnL;
+    assign Right = BtnR;
+    assign Select = BtnC;
+    assign Reset = BtnU;
+    connect_four connect_four_mod(
+        .Clk(sys_clk), .Reset(Reset),
+        .Left(Left), .Right(Right), .Select(Select),
+        .board(board), .colors(colors), .selected_col(selected_col)
+    );
+
+    /*
+    Control SSD Display with switches
+    */
+    assign SWITCHES = { Sw5, Sw4, Sw3, Sw2, Sw1, Sw0 };
+    always @ (SWITCHES)
+    begin : DISPLAY_ROW
+        case(SWITCHES)
+            6'b000001: SELECTED_ROW = 3'b000;
+            6'b000010: SELECTED_ROW = 3'b001;
+            6'b000100: SELECTED_ROW = 3'b010;
+            6'b001000: SELECTED_ROW = 3'b011;
+            6'b010000: SELECTED_ROW = 3'b100;
+            6'b100000: SELECTED_ROW = 3'b101;
+            default: SELECTED_ROW = 3'b110;
+			endcase
+    end
+
+    always @ (SELECTED_ROW, board)
+    begin : SSD_ASSIGN
+        if(SELECTED_ROW < 6) begin
+            SSD0 = { board[7*SELECTED_ROW+5], colors[7*SELECTED_ROW+5], board[7*SELECTED_ROW+6], colors[7*SELECTED_ROW+6] };
+            SSD1 = { board[7*SELECTED_ROW+3], colors[7*SELECTED_ROW+3], board[7*SELECTED_ROW+4], colors[7*SELECTED_ROW+4] };
+            SSD2 = { board[7*SELECTED_ROW+1], colors[7*SELECTED_ROW+1], board[7*SELECTED_ROW+2], colors[7*SELECTED_ROW+2] };
+            SSD3 = { 2'b00 , board[7*SELECTED_ROW], colors[7*SELECTED_ROW] };
+        end
+        else begin
+            SSD0 = 4'b0000;
+            SSD1 = 4'b0000;
+            SSD2 = 4'b0000;
+            SSD3 = 4'b0000;
+        end
+    end
+
+    assign ssdscan_clk = DIV_CLK[19:18];
+    assign An0  = !(ssdscan_clk == 2'b00);
+    assign An1  = !(ssdscan_clk == 2'b01);
+    assign An2  = !(ssdscan_clk == 2'b10);
+    assign An3  = !(ssdscan_clk == 2'b11);
+
+    always @ (ssdscan_clk, SSD0, SSD1, SSD2, SSD3)
+    begin : SSD_SCAN_OUT
+        case (ssdscan_clk) 
+            2'b00: SSD = SSD0;
+            2'b01: SSD = SSD1;
+            2'b10: SSD = SSD2;
+            2'b11: SSD = SSD3;
+				default: SSD = 4'bXXXX;
+        endcase 
+    end
+
+    always @ (SSD)
+    begin : SSD_DISPLAY
+        case({SSD[3], SSD[1]})
+            2'b00: SSD_CATHODES = (~An3)?{ SELECTED_ROW, 4'b1111 }:7'b1111111;
+            2'b01: SSD_CATHODES = {1'b1, ~SSD[0], SSD[0], 4'b1111};
+            2'b10: SSD_CATHODES = {4'b1111, SSD[2], ~SSD[2], 1'b1};
+            2'b11: SSD_CATHODES = {1'b1, ~SSD[0], SSD[0], 1'b1, SSD[2], ~SSD[2], 1'b1};
+				default: SSD = 4'bXXXX;
+        endcase
+    end
+
+
+    assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp} = {SSD_CATHODES, 1'b1};
+
+    /*
+    Control LEDs
+    */
+    //Light up LED to show selected column
+    assign Ld6 = (selected_col == 0);
+    assign Ld5 = (selected_col == 1);
+    assign Ld4 = (selected_col == 2);
+    assign Ld3 = (selected_col == 3);
+    assign Ld2 = (selected_col == 4);
+    assign Ld1 = (selected_col == 5);
+    assign Ld0 = (selected_col == 6);
+endmodule
