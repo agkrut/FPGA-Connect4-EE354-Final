@@ -7,7 +7,9 @@ module connect_four_top (
         Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp, 	//SSD Cathodes
         Sw5, Sw4, Sw3, Sw2, Sw1, Sw0, 		//Switches
         BtnU, BtnL, BtnR, BtnC,      		//Left, Right, and Center buttons
-		VGA_Red0, VGA_Green0, VGA_Blue0,		//VGA RGB pins
+		VGA_Red0, VGA_Green0, VGA_Blue0,	//VGA RGB pins
+		VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
+		//VGA_Red2, VGA_Green2, 				//VGA RGB pins
 		VGA_Hsync, VGA_Vsync				//VGA sync pins
     );
 
@@ -26,6 +28,8 @@ module connect_four_top (
     output An3, An2, An1, An0;
     output Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp;
 	output VGA_Red0, VGA_Green0, VGA_Blue0;
+	output VGA_Red1, VGA_Green1, VGA_Blue1;
+	//output VGA_Red2, VGA_Green2;
 	output VGA_Hsync, VGA_Vsync;
 
     wire Reset, ClkPort;
@@ -48,6 +52,8 @@ module connect_four_top (
 	
 	//VGA
 	wire VGA_Red0, VGA_Green0, VGA_Blue0;
+	wire VGA_Red1, VGA_Green1, VGA_Blue1;
+	//wire VGA_Red2, VGA_Green2;
 	wire VGA_Hsync, VGA_Vsync;
 
     /*
@@ -65,7 +71,7 @@ module connect_four_top (
     /*
     Create connect four module
     */
-    assign game_clk = DIV_CLK[25];
+    assign game_clk = DIV_CLK[24];
     assign Left = BtnL;
     assign Right = BtnR;
     assign Select = BtnC;
@@ -85,6 +91,8 @@ module connect_four_top (
 		.Clk(vga_clk), .Reset(Reset),
 		.VGA_Hsync(VGA_Hsync), .VGA_Vsync(VGA_Vsync),
 		.VGA_Red0(VGA_Red0), .VGA_Green0(VGA_Green0), .VGA_Blue0(VGA_Blue0),
+		.VGA_Red1(VGA_Red1), .VGA_Green1(VGA_Green1), .VGA_Blue1(VGA_Blue1),
+		//.VGA_Red2(VGA_Red2), .VGA_Green2(VGA_Green2),
 		.board(board), .colors(colors), .selected_col(selected_col),
 		.player(player), .game_over(game_over), .winner(winner)
 	);

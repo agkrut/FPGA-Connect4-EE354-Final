@@ -2,7 +2,9 @@
 module vga_display (
         Clk, Reset,
         VGA_Hsync, VGA_Vsync,
-		VGA_Red0, VGA_Green0, VGA_Blue0,
+		VGA_Red0, VGA_Green0, VGA_Blue0,	//VGA RGB pins
+		VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
+		//VGA_Red2, VGA_Green2, 				//VGA RGB pins
 		board, colors, selected_col,
 		player, game_over, winner
     );
@@ -14,6 +16,8 @@ module vga_display (
 	
 	output VGA_Hsync, VGA_Vsync;
 	output VGA_Red0, VGA_Green0, VGA_Blue0;
+	output VGA_Red1, VGA_Green1, VGA_Blue1;
+	//output VGA_Red2, VGA_Green2;
 	
 	
 	wire inDisplayArea;
@@ -21,6 +25,9 @@ module vga_display (
 	wire [9:0] CounterY;
 	reg R, G, B;
 	reg VGA_Red0, VGA_Green0, VGA_Blue0;
+	reg VGA_Red1, VGA_Green1, VGA_Blue1;
+	//reg VGA_Red2, VGA_Green2;
+	
 	//Store where each the center of a chip is
 	reg [9:0] x_centers [6:0];
 	reg [9:0] y_centers [5:0];
@@ -79,15 +86,14 @@ module vga_display (
 		B = 1;
 		//Color board area yellow
 		if(CounterX >= 73 && CounterX <= 537 && CounterY >= 80 && CounterY <= 479) begin
-			R = 0;
+			R = 1;
 			G = 1;
-			B = 1;
+			B = 0;
 		end
 		//Color chips that are in play
 		for(row=0; row<6; row=row+1) begin
 			for(col=0; col<7; col=col+1) begin
-				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) &&
-					CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
+				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
 					if(board[7*row+col]) begin //Piece exists on the board, color either red or black
 						R = ~colors[7*row+col];
 						G = 0;
@@ -117,15 +123,13 @@ module vga_display (
 		//Add yellow around pieces to turn them into circles instead of squares
 		for(row=0; row<6; row=row+1) begin
 			for(col=0; col<7; col=col+1) begin
-				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) &&
-						CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
+				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
 					for(offset=0; offset<=21; offset=offset+1) begin
 						//Color Yellow if outside of circle boundary
-						if((CounterY == (y_centers[row]-(27-offset)) || CounterY == (y_centers[row]+(27-offset))) &&
-							(CounterX < (x_centers[row]-circle_edges[offset]) || CounterX > (x_centers[row]+circle_edges[offset]))) begin
-							R = 0;
+						if((CounterY == (y_centers[row]-(27-offset)) || CounterY == (y_centers[row]+(27-offset))) && (CounterX < (x_centers[col]-circle_edges[offset]) || CounterX > (x_centers[col]+circle_edges[offset]))) begin
+							R = 1;
 							G = 1;
-							B = 1;
+							B = 0;
 						end
 					end
 				end
@@ -136,8 +140,13 @@ module vga_display (
 	always @(posedge Clk)
 	begin
 		VGA_Red0 <= R & inDisplayArea;
+		VGA_Red1 <= R & inDisplayArea;
+		//VGA_Red2 <= R & inDisplayArea;
 		VGA_Green0 <= G & inDisplayArea;
+		VGA_Green1 <= G & inDisplayArea;
+		//VGA_Green2 <= G & inDisplayArea;
 		VGA_Blue0 <= B & inDisplayArea;
+		VGA_Blue1 <= B & inDisplayArea;
 	end
 	
 endmodule
