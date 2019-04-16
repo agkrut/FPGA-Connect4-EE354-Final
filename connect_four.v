@@ -1,14 +1,16 @@
 `timescale 1ns / 1ps
 module connect_four (
         Clk, Reset,
-        Left, Right, Select,
-        board, colors, selected_col, player, game_over, winner
+        Left, Right, Select, Start,
+        board, colors, selected_col, player, game_over, winner,
+		start_state, end_state
     );
-    input Left, Right, Select, Reset, Clk;
+    input Clk, Reset, Left, Right, Select, Start;
     output [41:0] board, colors;
     output [2:0] selected_col;
 	output player, game_over;
 	output [1:0] winner;
+	output start_state, end_state;
     
     reg [41:0] board; //Row i, col j is located at board[7*i+j]
     /*
@@ -26,18 +28,22 @@ module connect_four (
     reg [1:0] winner; //00 = draw, 01 = red, 10 = black
 	
     reg [2:0] col_depth [6:0]; //Track depth of each column
-    reg [4:0] state;
+    reg [2:0] state;
     
     integer index;
     integer i, j;
 
     localparam
-    INITIAL     = 5'b00001,
-    MOVE        = 5'b00010,
-    CHECK_MOVE  = 5'b00100,
-    CHECK_C4    = 5'b01000,
-    END         = 5'b10000;
+    INITIAL     = 3'b000,
+	START 	    = 3'b001,
+    MOVE        = 3'b010,
+    CHECK_MOVE  = 3'b011,
+    CHECK_C4    = 3'b100,
+    END         = 3'b101;
 
+	assign start_state = (state==START);
+	assign end_state = (state==END);
+	
     always @(posedge Clk, posedge Reset) begin
         if (Reset) begin
             state <= INITIAL;
@@ -55,7 +61,7 @@ module connect_four (
             case (state)
                 INITIAL : 
                 begin
-							game_over = 0;
+					game_over = 0;
                     player <= 0;
                     selected_col <= 3; //Start in middle
                     winner <= 0;
@@ -68,9 +74,13 @@ module connect_four (
                     for(index=0; index<7; index=index+1) begin
                         col_depth[index] <= 0;
                     end
-                    state <= MOVE;
-                    //PRINT NEW GAME
+                    state <= START;
                 end
+				START :
+				begin
+					if(Start)
+						state <= MOVE;
+				end
                 MOVE :
                 begin
                     if(Select)

@@ -6,7 +6,8 @@ module vga_display (
 		VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
 		//VGA_Red2, VGA_Green2, 				//VGA RGB pins
 		board, colors, selected_col,
-		player, game_over, winner
+		player, game_over, winner,
+		start_state, end_state
     );
 	input Clk, Reset;
 	input [41:0] board, colors;
@@ -93,9 +94,10 @@ module vga_display (
 		//Color chips that are in play
 		for(row=0; row<6; row=row+1) begin
 			for(col=0; col<7; col=col+1) begin
-				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
+				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) &&
+					CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
 					if(board[7*row+col]) begin //Piece exists on the board, color either red or black
-						R = ~colors[7*row+col];
+						R = ~(colors[7*row+col]);
 						G = 0;
 						B = 0;
 					end
@@ -123,10 +125,12 @@ module vga_display (
 		//Add yellow around pieces to turn them into circles instead of squares
 		for(row=0; row<6; row=row+1) begin
 			for(col=0; col<7; col=col+1) begin
-				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
+				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) &&
+						CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
 					for(offset=0; offset<=21; offset=offset+1) begin
 						//Color Yellow if outside of circle boundary
-						if((CounterY == (y_centers[row]-(27-offset)) || CounterY == (y_centers[row]+(27-offset))) && (CounterX < (x_centers[col]-circle_edges[offset]) || CounterX > (x_centers[col]+circle_edges[offset]))) begin
+						if((CounterY == (y_centers[row]-(27-offset)) || CounterY == (y_centers[row]+(27-offset))) &&
+							(CounterX < (x_centers[col]-circle_edges[offset]) || CounterX > (x_centers[col]+circle_edges[offset]))) begin
 							R = 1;
 							G = 1;
 							B = 0;

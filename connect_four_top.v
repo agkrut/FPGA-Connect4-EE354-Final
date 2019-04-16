@@ -6,7 +6,7 @@ module connect_four_top (
         An3, An2, An1, An0, 				//SSD Anodes
         Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp, 	//SSD Cathodes
         Sw5, Sw4, Sw3, Sw2, Sw1, Sw0, 		//Switches
-        BtnU, BtnL, BtnR, BtnC,      		//Left, Right, and Center buttons
+        BtnU, BtnL, BtnR, BtnC, BtnD,  		//Left, Right, and Center buttons
 		VGA_Red0, VGA_Green0, VGA_Blue0,	//VGA RGB pins
 		VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
 		//VGA_Red2, VGA_Green2, 				//VGA RGB pins
@@ -16,7 +16,7 @@ module connect_four_top (
     /* INPUT */
     // Clock & Reset I/O
     input ClkPort;
-    input BtnL, BtnR, BtnC, BtnU;
+    input BtnL, BtnR, BtnC, BtnU, BtnD;
     input Sw5, Sw4, Sw3, Sw2, Sw1, Sw0;
 
     /* OUTPUT */
@@ -43,11 +43,12 @@ module connect_four_top (
     wire [2:0] selected_col;
 	wire player, game_over;
 	wire [1:0] winner;
+	wire start_state, end_state;
 
 	//SSD
     wire [5:0]  SWITCHES;
     reg [3:0]   SSD;
-    reg [3:0]  SSD3, SSD2, SSD1, SSD0;
+    reg [3:0]   SSD3, SSD2, SSD1, SSD0;
     reg [6:0]   SSD_CATHODES;
 	
 	//VGA
@@ -75,12 +76,14 @@ module connect_four_top (
     assign Left = BtnL;
     assign Right = BtnR;
     assign Select = BtnC;
+	assign Start = BtnD;
     assign Reset = BtnU;
     connect_four connect_four_mod(
         .Clk(game_clk), .Reset(Reset),
-        .Left(Left), .Right(Right), .Select(Select),
+        .Left(Left), .Right(Right), .Select(Select), .Start(Start),
         .board(board), .colors(colors), .selected_col(selected_col),
-		.player(player), .game_over(game_over), .winner(winner)
+		.player(player), .game_over(game_over), .winner(winner),
+		.start_state(start_state), .end_state(end_state)
     );
 
 	/*
@@ -94,7 +97,8 @@ module connect_four_top (
 		.VGA_Red1(VGA_Red1), .VGA_Green1(VGA_Green1), .VGA_Blue1(VGA_Blue1),
 		//.VGA_Red2(VGA_Red2), .VGA_Green2(VGA_Green2),
 		.board(board), .colors(colors), .selected_col(selected_col),
-		.player(player), .game_over(game_over), .winner(winner)
+		.player(player), .game_over(game_over), .winner(winner),
+		.start_state(start_state), .end_state(end_state)
 	);
 	
     /*

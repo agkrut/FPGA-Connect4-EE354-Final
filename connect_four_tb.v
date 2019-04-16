@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 module connect_four_tb();
 
-	reg Left, Right, Select;
+	reg Left, Right, Select, Start;
     wire [41:0] board;
     wire [41:0] colors;
     wire [2:0] selected_col;
@@ -13,7 +13,7 @@ module connect_four_tb();
 	
 	connect_four connect_four_mod(
         .Clk(Clk), .Reset(Reset),
-        .Left(Left), .Right(Right), .Select(Select),
+        .Left(Left), .Right(Right), .Select(Select), .Start(Start),
         .board(board), .colors(colors), .selected_col(selected_col)
     );
 	always  begin #10; Clk = ~ Clk; end
@@ -38,6 +38,12 @@ module connect_four_tb();
 		Reset = 0;
 		@ (posedge Clk);
 		#1
+		Start = 1;
+		@ (posedge Clk);
+		#1
+		Reset = 0;
+		@ (posedge Clk);
+		#1;
 		for(i=0; i <3; i=i+1) begin
 			Right = 1;
 			@ (posedge Clk);
