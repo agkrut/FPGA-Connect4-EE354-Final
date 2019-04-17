@@ -10,7 +10,8 @@ module vga_display (
 		start_state, end_state
     );
 	input Clk, Reset;
-	input [41:0] board, colors;
+	input [41:0] board;
+	input [41:0] colors;
 	input [2:0] selected_col;
 	input player, game_over, start_state, end_state;
 	input [1:0] winner;
@@ -43,18 +44,7 @@ module vga_display (
 	
 	integer row, col, offset;
 	reg [9:0] X, Y;
-	initial
-	begin
-		X=110;
-		for(col=0; col<7; col=col+1) begin
-			x_centers[col] = X;
-			X=X+65;
-		end
-		Y=442;
-		for(row=0; row<6; row=row+1) begin
-			y_centers[row] = Y;
-			Y=Y-65;
-		end/*
+		/*
 		circle_edges[0] = 5;
 		circle_edges[1] = 8;
 		circle_edges[2] = 11;
@@ -83,7 +73,6 @@ module vga_display (
 		circle_edges[25] = 27;
 		circle_edges[26] = 27;
 		circle_edges[27] = 27;*/
-	end
 	
 	localparam
     WHITE  = 2'b00,
@@ -91,79 +80,90 @@ module vga_display (
     BLACK  = 2'b10,
     YELLOW = 2'b11;
 	
-	always @ (CounterX, CounterY, board, colors)
+	always @(posedge Clk, posedge Reset)
 	begin : GAME_DISPLAY
-		//Set a white background
-		color=WHITE;
-		//Color board area yellow
-		if(CounterX >= 73 && CounterX <= 537 && CounterY >= 80 && CounterY <= 479) begin
-			color=YELLOW;
-		end
-		//Color chips that are in play
-		for(row=0; row<6; row=row+1) begin
+		if(Reset)
+		begin
+			X=110;
 			for(col=0; col<7; col=col+1) begin
-				if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
-					if(board[7*row+col]) //Piece exists on the board, color either red or black
-						color=(colors[7*row+col])?BLACK:RED;
-					else //No piece at location, color white
-						color=WHITE;
+				x_centers[col] = X;
+				X=X+65;
+			end
+			Y=442;
+			for(row=0; row<6; row=row+1) begin
+				y_centers[row] = Y;
+				Y=Y-65;
+			end
+		end
+		else
+		begin
+			//Set a white background
+			color=WHITE;
+			//Color board area yellow
+			if(CounterX >= 73 && CounterX <= 537 && CounterY >= 80 && CounterY <= 479) begin
+				color=YELLOW;
+			end
+			//Color chips that are in play
+			for(row=0; row<6; row=row+1) begin
+				for(col=0; col<7; col=col+1) begin
+					if(CounterX >= (x_centers[col]-27) && CounterX <= (x_centers[col]+27) && CounterY >= (y_centers[row]-27) && CounterY <= (y_centers[row]+27)) begin
+						if(board[7*(row)+col] == 1'b1) //Piece exists on the board, color either red or black
+							color=(colors[7*(row)+col] == 1'b1)?BLACK:RED;
+						else //No piece at location, color white
+							color=WHITE;
+					end
 				end
 			end
-		end
-		//Color the chip current being moved
-		if(CounterX >= (x_centers[selected_col]-27) && CounterX <= (x_centers[selected_col]+27) && CounterY >=13 && CounterY <= 67) begin
-			color = (player)?BLACK:RED; //Color based on current player's turn
+			//Color the chip current being moved
+			if(CounterX >= (x_centers[selected_col]-27) && CounterX <= (x_centers[selected_col]+27) && CounterY >=13 && CounterY <= 67) begin
+				color = (player==1'b1)?BLACK:RED; //Color based on current player's turn
+			end
+			case(color)
+				RED:
+				begin
+					VGA_Red0 <= 1'b0;
+					VGA_Red1 <= 1'b1 & inDisplayArea;
+					VGA_Red2 <= 1'b1 & inDisplayArea;
+					VGA_Green0 <= 1'b0;
+					VGA_Green1 <= 1'b0;
+					VGA_Green2 <= 1'b0;
+					VGA_Blue0 <= 1'b0;
+					VGA_Blue1 <= 1'b0;
+				end
+				BLACK:
+				begin
+					VGA_Red0 <= 1'b0;
+					VGA_Red1 <= 1'b0;
+					VGA_Red2 <= 1'b0;
+					VGA_Green0 <= 1'b0;
+					VGA_Green1 <= 1'b0;
+					VGA_Green2 <= 1'b0;
+					VGA_Blue0 <= 1'b0;
+					VGA_Blue1 <= 1'b0;
+				end
+				WHITE:
+				begin
+					VGA_Red0 <= 1'b1 & inDisplayArea;
+					VGA_Red1 <= 1'b1 & inDisplayArea;
+					VGA_Red2 <= 1'b1 & inDisplayArea;
+					VGA_Green0 <= 1'b1 & inDisplayArea;
+					VGA_Green1 <= 1'b1 & inDisplayArea;
+					VGA_Green2 <= 1'b1 & inDisplayArea;
+					VGA_Blue0 <= 1'b1 & inDisplayArea;
+					VGA_Blue1 <= 1'b1 & inDisplayArea;
+				end
+				YELLOW:
+				begin
+					VGA_Red0 <= 1'b1 & inDisplayArea;
+					VGA_Red1 <= 1'b0;
+					VGA_Red2 <= 1'b1 & inDisplayArea;
+					VGA_Green0 <= 1'b1 & inDisplayArea;
+					VGA_Green1 <= 1'b0;
+					VGA_Green2 <= 1'b1 & inDisplayArea;
+					VGA_Blue0 <= 1'b0;
+					VGA_Blue1 <= 1'b0;
+				end
+			endcase
 		end
 	end
-	
-	always @(posedge Clk)
-	begin
-		case(color)
-			RED:
-			begin
-				VGA_Red0 <= 1'b0;
-				VGA_Red1 <= 1'b1 & inDisplayArea;
-				VGA_Red2 <= 1'b1 & inDisplayArea;
-				VGA_Green0 <= 1'b0;
-				VGA_Green1 <= 1'b0;
-				VGA_Green2 <= 1'b0;
-				VGA_Blue0 <= 1'b0;
-				VGA_Blue1 <= 1'b0;
-			end
-			BLACK:
-			begin
-				VGA_Red0 <= 1'b0;
-				VGA_Red1 <= 1'b0;
-				VGA_Red2 <= 1'b0;
-				VGA_Green0 <= 1'b0;
-				VGA_Green1 <= 1'b0;
-				VGA_Green2 <= 1'b0;
-				VGA_Blue0 <= 1'b0;
-				VGA_Blue1 <= 1'b0;
-			end
-			WHITE:
-			begin
-				VGA_Red0 <= 1'b1 & inDisplayArea;
-				VGA_Red1 <= 1'b1 & inDisplayArea;
-				VGA_Red2 <= 1'b1 & inDisplayArea;
-				VGA_Green0 <= 1'b1 & inDisplayArea;
-				VGA_Green1 <= 1'b1 & inDisplayArea;
-				VGA_Green2 <= 1'b1 & inDisplayArea;
-				VGA_Blue0 <= 1'b1 & inDisplayArea;
-				VGA_Blue1 <= 1'b1 & inDisplayArea;
-			end
-			YELLOW:
-			begin
-				VGA_Red0 <= 1'b1 & inDisplayArea;
-				VGA_Red1 <= 1'b0;
-				VGA_Red2 <= 1'b1 & inDisplayArea;
-				VGA_Green0 <= 1'b1 & inDisplayArea;
-				VGA_Green1 <= 1'b0;
-				VGA_Green2 <= 1'b1 & inDisplayArea;
-				VGA_Blue0 <= 1'b0;
-				VGA_Blue1 <= 1'b0;
-			end
-		endcase
-	end
-	
 endmodule

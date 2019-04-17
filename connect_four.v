@@ -24,7 +24,7 @@ module connect_four (
     reg [41:0] colors; //if board[i]=1 then color is 0 = red, 1 = black
     reg [2:0] selected_col; //Track selected column
     reg player; //Player 0 is red, Player 1 is black
-	reg game_over; //Flag to determine if game has ended
+	 reg game_over; //Flag to determine if game has ended
     reg [1:0] winner; //00 = draw, 01 = red, 10 = black
 	
     reg [2:0] col_depth [6:0]; //Track depth of each column
@@ -215,7 +215,7 @@ module connect_four (
                         end
                         else begin
                             state <= MOVE;
-                            player <= player ^ 1;
+                            player <= player ^ 1'b1;
                             selected_col <= 3;
                         end
                     end

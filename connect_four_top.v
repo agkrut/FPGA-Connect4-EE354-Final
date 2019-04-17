@@ -7,10 +7,10 @@ module connect_four_top (
         Cg, Cf, Ce, Cd, Cc, Cb, Ca, Dp, 	//SSD Cathodes
         Sw5, Sw4, Sw3, Sw2, Sw1, Sw0, 		//Switches
         BtnU, BtnL, BtnR, BtnC, BtnD,  		//Left, Right, and Center buttons
-		VGA_Red0, VGA_Green0, VGA_Blue0,	//VGA RGB pins
-		VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
-		VGA_Red2, VGA_Green2, 				//VGA RGB pins
-		VGA_Hsync, VGA_Vsync				//VGA sync pins
+			VGA_Red0, VGA_Green0, VGA_Blue0,	//VGA RGB pins
+			VGA_Red1, VGA_Green1, VGA_Blue1,	//VGA RGB pins
+			VGA_Red2, VGA_Green2, 				//VGA RGB pins
+			VGA_Hsync, VGA_Vsync			//VGA sync pins
     );
 
     /* INPUT */
@@ -72,11 +72,11 @@ module connect_four_top (
     /*
     Create connect four module
     */
-    assign game_clk = DIV_CLK[24];
+    assign game_clk = DIV_CLK[25];
     assign Left = BtnL;
     assign Right = BtnR;
     assign Select = BtnC;
-	assign Start = BtnD;
+	 assign Start = BtnD;
     assign Reset = BtnU;
     connect_four connect_four_mod(
         .Clk(game_clk), .Reset(Reset),
@@ -105,7 +105,7 @@ module connect_four_top (
     Control SSD Display with switches
     */
     assign SWITCHES = { Sw5, Sw4, Sw3, Sw2, Sw1, Sw0 };
-    always @ (SWITCHES, board)
+    always @ (SWITCHES, board, colors)
     begin : DISPLAY_ROW
         case(SWITCHES)
             6'b000001: 
