@@ -35,7 +35,7 @@ module connect_four (
 
     localparam
     INITIAL     = 3'b000,
-	START 	    = 3'b001,
+	 START 	    = 3'b001,
     MOVE        = 3'b010,
     CHECK_MOVE  = 3'b011,
     CHECK_C4    = 3'b100,
