@@ -78,13 +78,187 @@ module vga_display (
     WHITE  = 2'b00,
 	 RED	  = 2'b01,
     BLACK  = 2'b10,
-    YELLOW = 2'b11;
+    YELLOW = 2'b11,
+	 LTR_A  = 4'b0000,
+	 LTR_B  = 4'b0001,
+	 LTR_C  = 4'b0010,
+	 LTR_D  = 4'b0011,
+	 LTR_E  = 4'b0100,
+	 LTR_I  = 4'b0101,
+	 LTR_K  = 4'b0110,
+	 LTR_L  = 4'b0111,
+	 LTR_N  = 4'b1000,
+	 LTR_P  = 4'b1001,
+	 LTR_R  = 4'b1010,
+	 LTR_S  = 4'b1011,
+	 LTR_T  = 4'b1100,
+	 LTR_W  = 4'b1101;
+	 
+	function [1:0] color_letter;
+	input [3:0] letter;
+	input [9:0] x;
+	input [9:0] y;
+	input [1:0] fill;
+	begin
+		color_letter = WHITE;
+		case(letter)
+			LTR_A :
+			begin
+				if(((CounterX>=x && CounterX<=x+5)||(CounterX>=x+18 && CounterX<=x+23)) && CounterY>=y+24 && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX>=x+9 && CounterX<=x+14 && ((CounterY>=y && CounterY<=y+11)||(CounterY>=y+21 && CounterY<=y+23)))
+					color_letter = fill;
+				if(((CounterX>=x+3 && CounterX<=x+8)||(CounterX>=x+15 && CounterX<=x+20)) && CounterY>=y+15 && CounterY<=y+23)
+					color_letter = fill;
+				if(((CounterX>=x+6 && CounterX<=x+8)||(CounterX>=x+15 && CounterX<=x+17)) && CounterY>=y+6 && CounterY<=y+23)
+					color_letter = fill;
+			end
+			LTR_B :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+20 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+12 && CounterY<=y+14)||(CounterY>=y+27 && CounterY<=y+29)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+23 && ((CounterY>=y+3 && CounterY<=y+11)||(CounterY>=y+15 && CounterY<=y+26)))
+					color_letter = fill;				
+			end
+			LTR_C :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y+6 && CounterY<=y+23)
+					color_letter = fill;
+				if(CounterX >= x+6 && CounterX <= x+17 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+27 && CounterY<=y+29)))
+					color_letter = fill;
+				if(((CounterX >= x+3 && CounterX <= x+8)||(CounterX >= x+15 && CounterX <= x+20)) && ((CounterY>=y+3 && CounterY<=y+5)||(CounterY>=y+24 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+20 && ((CounterY>=y+3 && CounterY<=y+8)||(CounterY>=y+21 && CounterY<=y+26)))
+					color_letter = fill;
+			end
+			LTR_D :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+17 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+27 && CounterY<=y+29)))
+					color_letter = fill;
+				if(CounterX >= x+15 && CounterX <= x+20 && ((CounterY>=y+3 && CounterY<=y+5)||(CounterY>=y+24 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+23 && CounterY>=y+6 && CounterY<=y+23)
+					color_letter = fill;
+			end
+			LTR_E :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+20 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+27 && CounterY<=y+29)))
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+17 && CounterY>=y+12 && CounterY<=y+14)
+					color_letter = fill;
+			end
+			LTR_I :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+			end
+			LTR_K :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x+6 && CounterX <= x+8 && CounterY>=y+9 && CounterY<=y+17)
+					color_letter = fill;
+				if(CounterX >= x+9 && CounterX <= x+11 && ((CounterY>=y+6 && CounterY<=y+11)||(CounterY>=y+15 && CounterY<=y+20)))
+					color_letter = fill;
+				if(CounterX >= x+12 && CounterX <= x+14 && ((CounterY>=y+3 && CounterY<=y+8)||(CounterY>=y+18 && CounterY<=y+23)))
+					color_letter = fill;
+				if(CounterX >= x+15 && CounterX <= x+17 && ((CounterY>=y && CounterY<=y+5)||(CounterY>=y+21 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+20 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+24 && CounterY<=y+29)))
+					color_letter = fill;
+				if(CounterX >= x+21 && CounterX <= x+23 && CounterY>=y+27 && CounterY<=y+29)
+					color_letter = fill;
+			end
+			LTR_L :
+			begin
+				if(CounterX>=x && CounterX<=x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX>=x && CounterX<=x+19 && CounterY>=y+27 && CounterY<=y+29)
+					color_letter = fill;
+			end
+			LTR_N :
+			begin
+				if(((CounterX >= x && CounterX <= x+5)||(CounterX >= x+18 && CounterX <= x+23)) && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x+6 && CounterX <= x+8 && CounterY>=y+3 && CounterY<=y+11)
+					color_letter = fill;
+				if(CounterX >= x+9 && CounterX <= x+11 && CounterY>=y+6 && CounterY<=y+17)
+					color_letter = fill;
+				if(CounterX >= x+12 && CounterX <= x+14 && CounterY>=y+12 && CounterY<=y+23)
+					color_letter = fill;
+				if(CounterX >= x+15 && CounterX <= x+17 && CounterY>=y+18 && CounterY<=y+26)
+					color_letter = fill;
+			end
+			LTR_P :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+20 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+15 && CounterY<=y+17)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+23 && (CounterY>=y+3 && CounterY<=y+14))
+					color_letter = fill;
+			end
+			LTR_R :
+			begin
+				if(CounterX >= x && CounterX <= x+5 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+20 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+15 && CounterY<=y+17)))
+					color_letter = fill;
+				if(CounterX >= x+18 && CounterX <= x+23 && ((CounterY>=y+3 && CounterY<=y+14) || (CounterY>=y+18 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+21 && CounterX <= x+26 && CounterY>=y+27 && CounterY<=y+29)
+					color_letter = fill;
+			end
+			LTR_S :
+			begin
+				if(CounterX >= x+3 && CounterX <= x+17 && ((CounterY>=y && CounterY<=y+2)||(CounterY>=y+27 && CounterY<=y+29)))
+					color_letter = fill;
+				if(CounterX >= x && CounterX <= x+5 && ((CounterY>=y+3 && CounterY<=y+11) || (CounterY>=y+21 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+15 && CounterX <= x+20 && ((CounterY>=y+3 && CounterY<=y+8) || (CounterY>=y+18 && CounterY<=y+26)))
+					color_letter = fill;
+				if(CounterX >= x+3 && CounterX <= x+11 && CounterY>=y+12 && CounterY<=y+14)
+					color_letter = fill;
+				if(CounterX >= x+9 && CounterX <= x+17 && CounterY>=y+15 && CounterY<=y+17)
+					color_letter = fill;
+			end
+			LTR_T :
+			begin
+				if(CounterX>=x && CounterX<=x+23 && CounterY>=y && CounterY<=y+2)
+					color_letter = fill;
+				if(CounterX>=x+9 && CounterX<=x+14 && CounterY>=y && CounterY<=y+29)
+					color_letter = fill;
+			end
+			LTR_W :
+			begin
+				if(CounterY>=y && CounterY<=y+8 && ((CounterX>=x && CounterX<=x+5)||(CounterX>=x+36 && CounterX<=x+41)))
+					color_letter = fill;
+				if(CounterY>=y+9 && CounterY<=y+14 && ((CounterX>=x+3 && CounterX<=x+8)||(CounterX>=x+33 && CounterX<=x+38)))
+					color_letter = fill;
+				if(CounterY>=y+15 && CounterY<=y+20 && ((CounterX>=x+6 && CounterX<=x+11)||(CounterX>=x+30 && CounterX<=x+35)))
+					color_letter = fill;
+				if(CounterY>=y+18 && CounterY<=y+29 && ((CounterX>=x+9 && CounterX<=x+14)||(CounterX>=x+27 && CounterX<=x+32)))
+					color_letter = fill;
+				if(CounterX>=x+18 && CounterX<=x+23 && CounterY>=y && CounterY<=y+14)
+					color_letter = fill;
+				if(CounterY>=y+9 && CounterY<=y+20 && ((CounterX>=x+15 && CounterX<=x+17)||(CounterX>=x+24 && CounterX<=x+26)))
+					color_letter = fill;
+			end
+		endcase
+	end
+	endfunction
 	
 	always @(posedge Clk, posedge Reset)
 	begin : GAME_DISPLAY
 		if(Reset)
 		begin
-			X=110;
+			X=125;
 			for(col=0; col<7; col=col+1) begin
 				x_centers[col] = X;
 				X=X+65;
@@ -100,7 +274,7 @@ module vga_display (
 			//Set a white background
 			color=WHITE;
 			//Color board area yellow
-			if(CounterX >= 73 && CounterX <= 537 && CounterY >= 80 && CounterY <= 479) begin
+			if(CounterX >= 88 && CounterX <= 551 && CounterY >= 80 && CounterY <= 479) begin
 				color=YELLOW;
 			end
 			//Color chips that are in play
@@ -114,9 +288,102 @@ module vga_display (
 					end
 				end
 			end
-			//Color the chip current being moved
-			if(CounterX >= (x_centers[selected_col]-27) && CounterX <= (x_centers[selected_col]+27) && CounterY >=13 && CounterY <= 67) begin
-				color = (player==1'b1)?BLACK:RED; //Color based on current player's turn
+			if(CounterY >=13 && CounterY <= 67) begin
+				if(start_state) begin
+					//P
+					if(CounterX >= (x_centers[3]-92) && CounterX <= (x_centers[3]-78))
+						color=color_letter(LTR_P,x_centers[3]-92, 25, BLACK);
+					//R
+					if(CounterX >= (x_centers[3]-75) && CounterX <= (x_centers[3]-58))
+						color=color_letter(LTR_R,x_centers[3]-75, 25, BLACK);
+					//E
+					if(CounterX >= (x_centers[3]-55) && CounterX <= (x_centers[3]-42))
+						color=color_letter(LTR_E,x_centers[3]-55, 25, BLACK);
+					//S
+					if(CounterX >= (x_centers[3]-38) && CounterX <= (x_centers[3]-25))
+						color=color_letter(LTR_S,x_centers[3]-38, 25, BLACK);
+					//S
+					if(CounterX >= (x_centers[3]-21) && CounterX <= (x_centers[3]-8))
+						color=color_letter(LTR_S,x_centers[3]-21, 25, BLACK);
+					
+					//S
+					if(CounterX >= (x_centers[3]+8) && CounterX <= (x_centers[3]+21))
+						color=color_letter(LTR_S,x_centers[3]+8, 25, BLACK);
+					//T
+					if(CounterX >= (x_centers[3]+25) && CounterX <= (x_centers[3]+40))
+						color=color_letter(LTR_S,x_centers[3]+25, 25, BLACK);
+					//A
+					if(CounterX >= (x_centers[3]+41) && CounterX <= (x_centers[3]+56))
+						color=color_letter(LTR_S,x_centers[3]+41, 25, BLACK);
+					//R
+					if(CounterX >= (x_centers[3]+59) && CounterX <= (x_centers[3]+76))
+						color=color_letter(LTR_S,x_centers[3]+59, 25, BLACK);
+					//T
+					if(CounterX >= (x_centers[3]+78) && CounterX <= (x_centers[3]+93))
+						color=color_letter(LTR_S,x_centers[3]+78, 25, BLACK);
+				end
+				else if(end_state) begin
+					case(winner)
+					 2'b00:
+					 begin
+						if(CounterX >= (x_centers[3]-58) && CounterX <= (x_centers[3]-35))
+							color=color_letter(LTR_D,x_centers[3]-58, 25, YELLOW);
+						if(CounterX >= (x_centers[3]-30) && CounterX <= (x_centers[3]-4))
+							color=color_letter(LTR_R,x_centers[3]-30, 25, YELLOW);
+						if(CounterX >= (x_centers[3]) && CounterX <= (x_centers[3]+23))
+							color=color_letter(LTR_A,x_centers[3], 25, YELLOW);
+						if(CounterX >= (x_centers[3]+24) && CounterX <= (x_centers[3]+65))
+							color=color_letter(LTR_W,x_centers[3]+24, 25, YELLOW);
+					 end
+					 2'b01: //RED WINS
+					 begin
+						if(CounterX >= (x_centers[3]-91) && CounterX <= (x_centers[3]-65))
+							color=color_letter(LTR_R,x_centers[3]-91, 25, RED);
+						if(CounterX >= (x_centers[3]-61) && CounterX <= (x_centers[3]-41))
+							color=color_letter(LTR_E,x_centers[3]-61, 25, RED);
+						if(CounterX >= (x_centers[3]-35) && CounterX <= (x_centers[3]-12))
+							color=color_letter(LTR_D,x_centers[3]-35, 25, RED);
+							
+						if(CounterX >= (x_centers[3]+12) && CounterX <= (x_centers[3]+53))
+							color=color_letter(LTR_W,x_centers[3]+12, 25, RED);
+						if(CounterX >= (x_centers[3]+57) && CounterX <= (x_centers[3]+62))
+							color=color_letter(LTR_I,x_centers[3]+57, 25, RED);
+						if(CounterX >= (x_centers[3]+69) && CounterX <= (x_centers[3]+92))
+							color=color_letter(LTR_N,x_centers[3]+69, 25, RED);
+						if(CounterX >= (x_centers[3]+98) && CounterX <= (x_centers[3]+118))
+							color=color_letter(LTR_S,x_centers[3]+98, 25, RED);
+					 end
+					 2'b10: //BLACK WINS
+					 begin
+						if(CounterX >= (x_centers[3]-135) && CounterX <= (x_centers[3]-112))
+							color=color_letter(LTR_B,x_centers[3]-135, 25, BLACK);
+						if(CounterX >= (x_centers[3]-107) && CounterX <= (x_centers[3]-88))
+							color=color_letter(LTR_L,x_centers[3]-107, 25, BLACK);
+						if(CounterX >= (x_centers[3]-85) && CounterX <= (x_centers[3]-61))
+							color=color_letter(LTR_A,x_centers[3]-85, 25, BLACK);
+						if(CounterX >= (x_centers[3]-57) && CounterX <= (x_centers[3]-37))
+							color=color_letter(LTR_C,x_centers[3]-57, 25, BLACK);
+						if(CounterX >= (x_centers[3]-32) && CounterX <= (x_centers[3]-9))
+							color=color_letter(LTR_K,x_centers[3]-32, 25, BLACK);
+						
+						
+						if(CounterX >= (x_centers[3]+12) && CounterX <= (x_centers[3]+53))
+							color=color_letter(LTR_W,x_centers[3]+12, 25, BLACK);
+						if(CounterX >= (x_centers[3]+57) && CounterX <= (x_centers[3]+62))
+							color=color_letter(LTR_I,x_centers[3]+57, 25, BLACK);
+						if(CounterX >= (x_centers[3]+69) && CounterX <= (x_centers[3]+92))
+							color=color_letter(LTR_N,x_centers[3]+69, 25, BLACK);
+						if(CounterX >= (x_centers[3]+98) && CounterX <= (x_centers[3]+118))
+							color=color_letter(LTR_S,x_centers[3]+98, 25, BLACK);
+					 end
+					 endcase
+				end
+				else begin
+					//Color the chip current being moved
+					if(CounterX >= (x_centers[selected_col]-27) && CounterX <= (x_centers[selected_col]+27)) begin
+						color = (player==1'b1)?BLACK:RED; //Color based on current player's turn
+					end
+				end
 			end
 			case(color)
 				RED:

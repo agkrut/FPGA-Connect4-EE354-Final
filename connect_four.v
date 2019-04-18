@@ -27,7 +27,7 @@ module connect_four (
 	 reg game_over; //Flag to determine if game has ended
     reg [1:0] winner; //00 = draw, 01 = red, 10 = black
 	
-    reg [2:0] col_depth [6:0]; //Track depth of each column
+    reg [20:0] col_depth; //Track depth of each column, col*3+2:col*3
     reg [2:0] state;
     
     integer index;
@@ -47,184 +47,172 @@ module connect_four (
     always @(posedge Clk, posedge Reset) begin
         if (Reset) begin
             state <= INITIAL;
-            board <= 42'bX;
-            colors <= 42'bX;
-            selected_col <= 3'bX;
-            player <= 1'bX;
-            for(index=0; index<7; index=index+1) begin
-                col_depth[index] <= 3'bX;
-            end
-            winner <= 2'bX;
         end
         else begin : STATE_MACHINE
-            (* full_case, parallel_case *)
+            (* parallel_case *)
             case (state)
-                INITIAL : 
-                begin
-					game_over = 0;
-                    player <= 0;
-                    selected_col <= 3; //Start in middle
-                    winner <= 0;
-                    //RESET BOARD
-                    for (index=0; index<42; index=index+1) begin
-                        board[index] <= 0;
-                        colors[index] <= 0;
-                    end
-                    //RESET DEPTHS
-                    for(index=0; index<7; index=index+1) begin
-                        col_depth[index] <= 0;
-                    end
-                    state <= START;
-                end
+				INITIAL : 
+				begin
+				  game_over = 0;
+				  player <= 0;
+				  selected_col <= 3; //Start in middle
+				  winner <= 0;
+				  //RESET BOARD
+				  board <= {42{1'b0}};
+				  colors <= {42{1'b0}};
+				  //RESET DEPTHS
+				  col_depth <= {20{1'b0}};
+				  state <= START;
+				end
 				START :
 				begin
 					if(Start)
 						state <= MOVE;
 				end
-                MOVE :
-                begin
-                    if(Select)
-                        state <= CHECK_MOVE;
-                    else
-                    begin
-                        if(Left & !Right & (selected_col > 0))
-                            selected_col <= selected_col - 1'b1;
-                        if(Right & !Left & (selected_col < 6))
-                            selected_col <= selected_col + 1'b1;
-                    end
-                end
-                CHECK_MOVE :
-                begin
-                    if(col_depth[selected_col] != 6)
-                    begin
-                        state <= CHECK_C4;
-                        col_depth[selected_col] <= col_depth[selected_col] + 1'b1;
-                        board[7*col_depth[selected_col]+selected_col] <= 1;
-                        if(player) //Check if chip is colored black
-                            colors[7*col_depth[selected_col]+selected_col] <= 1;
-                    end
-                    else
-                        state <= MOVE;
-                end
-                CHECK_C4 :
-                begin
-                    //Check columns
-                    /*
-                    O   O   X
-                    O   X   X
-                    X   X   X
-                    X   X   X
-                    X   X   O
-                    X,  O,  O
-                    */
-                    for(i=0; i<7; i=i+1) begin //Column
-                        for(j=0; j<3; j=j+1) begin //Row
-                            //Check that there's discs in each spot
-                            if(board[7*(j)+i] & board[7*(j+1)+i] & board[7*(j+2)+i] & board[7*(j+3)+i]) begin
-                                //Check all 4 are the same color
-                                if(!((colors[7*(j)+i]^colors[7*(j+1)+i]) |
-                                    (colors[7*(j+1)+i]^colors[7*(j+2)+i]) |
-                                    (colors[7*(j+2)+i]^colors[7*(j+3)+i]))) begin
-                                    game_over = 1;
-                                end
-                            end
-                        end
-                    end
-                    
-                    //Check rows
-                    /*
-                    X X X X O O O,
-                    O X X X X O O,
-                    O O X X X X O,
-                    O O O X X X X,
-                    */
-                    for(i=0; i<6; i=i+1) begin //Row
-                        for(j=0; j<4; j=j+1) begin //Column
-                            //Check that there's discs in each spot
-                            if(board[7*i+(j)] & board[7*i+(j+1)] & board[7*i+(j+2)] & board[7*i+(j+3)]) begin
-                                //Check all 4 are the same color
-                                if(!((colors[7*i+(j)]^colors[7*i+(j+1)]) |
-                                    (colors[7*i+(j+1)]^colors[7*i+(j+2)]) |
-                                    (colors[7*i+(j+2)]^colors[7*i+(j+3)]))) begin
-                                    game_over = 1;
-                                end
-                            end
-                        end
-                    end
+				MOVE :
+				begin
+				  if(Select)
+						state <= CHECK_MOVE;
+				  else
+				  begin
+						if(Left & !Right & (selected_col > 0))
+							 selected_col <= selected_col - 1'b1;
+						if(Right & !Left & (selected_col < 6))
+							 selected_col <= selected_col + 1'b1;
+				  end
+				end
+				CHECK_MOVE :
+				begin
+				  if(col_depth[selected_col*3 +: 3] != 6)
+				  begin
+						state <= CHECK_C4;
+						col_depth[selected_col*3 +: 3] <= col_depth[selected_col*3 +: 3] + 1'b1;
+						board[7*col_depth[selected_col*3 +: 3]+selected_col] <= 1;
+						if(player) //Check if chip is colored black
+							 colors[7*col_depth[selected_col*3 +: 3]+selected_col] <= 1;
+				  end
+				  else
+						state <= MOVE;
+				end
+				CHECK_C4 :
+				begin
+				  //Check columns
+				  /*
+				  O   O   X
+				  O   X   X
+				  X   X   X
+				  X   X   X
+				  X   X   O
+				  X,  O,  O
+				  */
+				  for(i=0; i<7; i=i+1) begin //Column
+						for(j=0; j<3; j=j+1) begin //Row
+							 //Check that there's discs in each spot
+							 if(board[7*(j)+i] & board[7*(j+1)+i] & board[7*(j+2)+i] & board[7*(j+3)+i]) begin
+								  //Check all 4 are the same color
+									  if(!((colors[7*(j)+i]^colors[7*(j+1)+i]) |
+										(colors[7*(j+1)+i]^colors[7*(j+2)+i]) |
+										(colors[7*(j+2)+i]^colors[7*(j+3)+i]))) begin
+										game_over = 1;
+								  end
+							 end
+						end
+				  end
+				
+				  //Check rows
+				  /*
+				  X X X X O O O,
+				  O X X X X O O,
+				  O O X X X X O,
+				  O O O X X X X,
+				  */
+				  for(i=0; i<6; i=i+1) begin //Row
+						for(j=0; j<4; j=j+1) begin //Column
+							 //Check that there's discs in each spot
+							 if(board[7*i+(j)] & board[7*i+(j+1)] & board[7*i+(j+2)] & board[7*i+(j+3)]) begin
+								  //Check all 4 are the same color
+								  if(!((colors[7*i+(j)]^colors[7*i+(j+1)]) |
+										(colors[7*i+(j+1)]^colors[7*i+(j+2)]) |
+										(colors[7*i+(j+2)]^colors[7*i+(j+3)]))) begin
+										game_over = 1;
+								  end
+							 end
+						end
+				  end
 
-                    //Check Diagonals BottomLeft to TopRight
-                    /*
-                    O O O X O O O
-                    O O X O O O O
-                    O X O X O O X
-                    X O X O O X O
-                    O X O O X O O
-                    X O O X O O O
-                    */
-                    for(i=0; i<4; i=i+1) begin //Starting column
-                        for(j=0; j<3; j=j+1) begin //Starting row
-                            if(board[7*(j)+(i)] & board[7*(j+1)+(i+1)] &
-                                board[7*(j+2)+(i+2)] & board[7*(j+3)+(i+3)]) begin
-                                //Check all 4 are the same color
-                                if(!((colors[7*(j)+(i)]^colors[7*(j+1)+(i+1)]) |
-                                    (colors[7*(j+1)+(i+1)]^colors[7*(j+2)+(i+2)]) |
-                                    (colors[7*(j+2)+(i+2)]^colors[7*(j+3)+(i+3)]))) begin
-                                    game_over = 1;
-                                end
-                            end
-                        end
-                    end
+				  //Check Diagonals BottomLeft to TopRight
+				  /*
+				  O O O X O O O
+				  O O X O O O O
+				  O X O X O O X
+				  X O X O O X O
+				  O X O O X O O
+				  X O O X O O O
+				  */
+				  for(i=0; i<4; i=i+1) begin //Starting column
+						for(j=0; j<3; j=j+1) begin //Starting row
+							 if(board[7*(j)+(i)] & board[7*(j+1)+(i+1)] &
+								  board[7*(j+2)+(i+2)] & board[7*(j+3)+(i+3)]) begin
+								  //Check all 4 are the same color
+								  if(!((colors[7*(j)+(i)]^colors[7*(j+1)+(i+1)]) |
+										(colors[7*(j+1)+(i+1)]^colors[7*(j+2)+(i+2)]) |
+										(colors[7*(j+2)+(i+2)]^colors[7*(j+3)+(i+3)]))) begin
+										game_over = 1;
+								  end
+							 end
+						end
+				  end
 
-                    //Check Diagonals BottomRight to TopLeft
-                    /*
-                    X O O X O O O
-                    O X O O X O O
-                    X O X O O X O
-                    O X O X O O X
-                    O O X O O O O
-                    O O O X O O O
-                    */
-                    for(i=0; i<4; i=i+1) begin //Starting column
-                        for(j=3; j<6; j=j+1) begin //Starting row
-                            if(board[7*(j)+(i)] & board[7*(j-1)+(i+1)] &
-                                board[7*(j-2)+(i+2)] & board[7*(j-3)+(i+3)]) begin
-                                //Check all 4 are the same color
-                                if(!((colors[7*(j)+(i)]^colors[7*(j-1)+(i+1)]) |
-                                    (colors[7*(j-1)+(i+1)]^colors[7*(j-2)+(i+2)]) |
-                                    (colors[7*(j-2)+(i+2)]^colors[7*(j-3)+(i+3)]))) begin
-                                    game_over = 1;
-                                end
-                            end
-                        end
-                    end
-                    
-                    if(game_over) begin
-                        state <= END;
-                        winner <= { player, ~player };
-                    end
-                    else begin
-                        //Determine if all rows are filled up and is a draw
-                        game_over=1;
-                        for(i=0; i<7; i=i+1) begin
-                            if(col_depth[i] != 6)
-                                game_over=0;
-                        end
-                        if(game_over) begin
-                            state <= END;
-                            winner <= 2'b00;
-                        end
-                        else begin
-                            state <= MOVE;
-                            player <= player ^ 1'b1;
-                            selected_col <= 3;
-                        end
-                    end
-                end
-                END :
-                begin
-                
-                end
-            endcase
+				  //Check Diagonals BottomRight to TopLeft
+				  /*
+				  X O O X O O O
+				  O X O O X O O
+				  X O X O O X O
+				  O X O X O O X
+				  O O X O O O O
+				  O O O X O O O
+				  */
+				  for(i=0; i<4; i=i+1) begin //Starting column
+						for(j=3; j<6; j=j+1) begin //Starting row
+							 if(board[7*(j)+(i)] & board[7*(j-1)+(i+1)] &
+								  board[7*(j-2)+(i+2)] & board[7*(j-3)+(i+3)]) begin
+								  //Check all 4 are the same color
+								  if(!((colors[7*(j)+(i)]^colors[7*(j-1)+(i+1)]) |
+										(colors[7*(j-1)+(i+1)]^colors[7*(j-2)+(i+2)]) |
+										(colors[7*(j-2)+(i+2)]^colors[7*(j-3)+(i+3)]))) begin
+										game_over = 1;
+								  end
+							 end
+						end
+				  end
+				  
+				  if(game_over) begin
+						state <= END;
+						winner <= { player, ~player };
+				  end
+				  else begin
+						//Determine if all rows are filled up and is a draw
+						game_over=1;
+						for(i=0; i<7; i=i+1) begin
+							 if(col_depth[i*3 +: 3] != 6)
+								game_over=0;
+						end
+						if(game_over) begin
+							 state <= END;
+							 winner <= 2'b00;
+						end
+						else begin
+							 state <= MOVE;
+							 player <= player ^ 1'b1;
+							 selected_col <= 3;
+						end
+				  end
+				 end
+				 END :
+				 begin
+				 
+				 end
+          endcase
         end
     end
 endmodule
