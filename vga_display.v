@@ -291,36 +291,36 @@ module vga_display (
 			if(CounterY >=13 && CounterY <= 67) begin
 				if(start_state) begin
 					//P
-					if(CounterX >= (x_centers[3]-92) && CounterX <= (x_centers[3]-78))
-						color=color_letter(LTR_P,x_centers[3]-92, 25, BLACK);
+					if(CounterX >= (x_centers[3]-136) && CounterX <= (x_centers[3]-113))
+						color=color_letter(LTR_P,x_centers[3]-136, 25, BLACK);
 					//R
-					if(CounterX >= (x_centers[3]-75) && CounterX <= (x_centers[3]-58))
-						color=color_letter(LTR_R,x_centers[3]-75, 25, BLACK);
+					if(CounterX >= (x_centers[3]-109) && CounterX <= (x_centers[3]-83))
+						color=color_letter(LTR_R,x_centers[3]-109, 25, BLACK);
 					//E
-					if(CounterX >= (x_centers[3]-55) && CounterX <= (x_centers[3]-42))
-						color=color_letter(LTR_E,x_centers[3]-55, 25, BLACK);
+					if(CounterX >= (x_centers[3]-79) && CounterX <= (x_centers[3]-59))
+						color=color_letter(LTR_E,x_centers[3]-79, 25, BLACK);
 					//S
-					if(CounterX >= (x_centers[3]-38) && CounterX <= (x_centers[3]-25))
-						color=color_letter(LTR_S,x_centers[3]-38, 25, BLACK);
+					if(CounterX >= (x_centers[3]-54) && CounterX <= (x_centers[3]-34))
+						color=color_letter(LTR_S,x_centers[3]-54, 25, BLACK);
 					//S
-					if(CounterX >= (x_centers[3]-21) && CounterX <= (x_centers[3]-8))
-						color=color_letter(LTR_S,x_centers[3]-21, 25, BLACK);
+					if(CounterX >= (x_centers[3]-27) && CounterX <= (x_centers[3]-7))
+						color=color_letter(LTR_S,x_centers[3]-27, 25, BLACK);
 					
 					//S
-					if(CounterX >= (x_centers[3]+8) && CounterX <= (x_centers[3]+21))
-						color=color_letter(LTR_S,x_centers[3]+8, 25, BLACK);
+					if(CounterX >= (x_centers[3]+7) && CounterX <= (x_centers[3]+27))
+						color=color_letter(LTR_S,x_centers[3]+7, 25, BLACK);
 					//T
-					if(CounterX >= (x_centers[3]+25) && CounterX <= (x_centers[3]+40))
-						color=color_letter(LTR_S,x_centers[3]+25, 25, BLACK);
+					if(CounterX >= (x_centers[3]+31) && CounterX <= (x_centers[3]+54))
+						color=color_letter(LTR_T,x_centers[3]+31, 25, BLACK);
 					//A
-					if(CounterX >= (x_centers[3]+41) && CounterX <= (x_centers[3]+56))
-						color=color_letter(LTR_S,x_centers[3]+41, 25, BLACK);
+					if(CounterX >= (x_centers[3]+55) && CounterX <= (x_centers[3]+78))
+						color=color_letter(LTR_A,x_centers[3]+55, 25, BLACK);
 					//R
-					if(CounterX >= (x_centers[3]+59) && CounterX <= (x_centers[3]+76))
-						color=color_letter(LTR_S,x_centers[3]+59, 25, BLACK);
+					if(CounterX >= (x_centers[3]+82) && CounterX <= (x_centers[3]+108))
+						color=color_letter(LTR_R,x_centers[3]+82, 25, BLACK);
 					//T
-					if(CounterX >= (x_centers[3]+78) && CounterX <= (x_centers[3]+93))
-						color=color_letter(LTR_S,x_centers[3]+78, 25, BLACK);
+					if(CounterX >= (x_centers[3]+109) && CounterX <= (x_centers[3]+132))
+						color=color_letter(LTR_T,x_centers[3]+109, 25, BLACK);
 				end
 				else if(end_state) begin
 					case(winner)
