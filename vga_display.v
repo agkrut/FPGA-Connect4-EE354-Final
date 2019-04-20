@@ -291,90 +291,90 @@ module vga_display (
 			if(CounterY >=13 && CounterY <= 67) begin
 				if(start_state) begin
 					//P
-					if(CounterX >= (x_centers[3]-136) && CounterX <= (x_centers[3]-113))
-						color=color_letter(LTR_P,x_centers[3]-136, 25, BLACK);
+					if(CounterX >= 184 && CounterX <= 207)
+						color=color_letter(LTR_P,184, 25, BLACK);
 					//R
-					if(CounterX >= (x_centers[3]-109) && CounterX <= (x_centers[3]-83))
-						color=color_letter(LTR_R,x_centers[3]-109, 25, BLACK);
+					if(CounterX >= 211 && CounterX <= 237)
+						color=color_letter(LTR_R,211, 25, BLACK);
 					//E
-					if(CounterX >= (x_centers[3]-79) && CounterX <= (x_centers[3]-59))
-						color=color_letter(LTR_E,x_centers[3]-79, 25, BLACK);
+					if(CounterX >= 241 && CounterX <= 261)
+						color=color_letter(LTR_E,241, 25, BLACK);
 					//S
-					if(CounterX >= (x_centers[3]-54) && CounterX <= (x_centers[3]-34))
-						color=color_letter(LTR_S,x_centers[3]-54, 25, BLACK);
+					if(CounterX >= 266 && CounterX <= 286)
+						color=color_letter(LTR_S,266, 25, BLACK);
 					//S
-					if(CounterX >= (x_centers[3]-27) && CounterX <= (x_centers[3]-7))
-						color=color_letter(LTR_S,x_centers[3]-27, 25, BLACK);
+					if(CounterX >= 293 && CounterX <= 313)
+						color=color_letter(LTR_S,293, 25, BLACK);
 					
 					//S
-					if(CounterX >= (x_centers[3]+7) && CounterX <= (x_centers[3]+27))
-						color=color_letter(LTR_S,x_centers[3]+7, 25, BLACK);
+					if(CounterX >= 327 && CounterX <= 347)
+						color=color_letter(LTR_S,327, 25, BLACK);
 					//T
-					if(CounterX >= (x_centers[3]+31) && CounterX <= (x_centers[3]+54))
-						color=color_letter(LTR_T,x_centers[3]+31, 25, BLACK);
+					if(CounterX >= 351 && CounterX <= 374)
+						color=color_letter(LTR_T,351, 25, BLACK);
 					//A
-					if(CounterX >= (x_centers[3]+55) && CounterX <= (x_centers[3]+78))
-						color=color_letter(LTR_A,x_centers[3]+55, 25, BLACK);
+					if(CounterX >= 375 && CounterX <= 398)
+						color=color_letter(LTR_A,375, 25, BLACK);
 					//R
-					if(CounterX >= (x_centers[3]+82) && CounterX <= (x_centers[3]+108))
-						color=color_letter(LTR_R,x_centers[3]+82, 25, BLACK);
+					if(CounterX >= 402 && CounterX <= 428)
+						color=color_letter(LTR_R,402, 25, BLACK);
 					//T
-					if(CounterX >= (x_centers[3]+109) && CounterX <= (x_centers[3]+132))
-						color=color_letter(LTR_T,x_centers[3]+109, 25, BLACK);
+					if(CounterX >= 429 && CounterX <= 452)
+						color=color_letter(LTR_T,429, 25, BLACK);
 				end
 				else if(end_state) begin
 					case(winner)
 					 2'b00:
 					 begin
-						if(CounterX >= (x_centers[3]-58) && CounterX <= (x_centers[3]-35))
-							color=color_letter(LTR_D,x_centers[3]-58, 25, YELLOW);
-						if(CounterX >= (x_centers[3]-30) && CounterX <= (x_centers[3]-4))
-							color=color_letter(LTR_R,x_centers[3]-30, 25, YELLOW);
-						if(CounterX >= (x_centers[3]) && CounterX <= (x_centers[3]+23))
-							color=color_letter(LTR_A,x_centers[3], 25, YELLOW);
-						if(CounterX >= (x_centers[3]+24) && CounterX <= (x_centers[3]+65))
-							color=color_letter(LTR_W,x_centers[3]+24, 25, YELLOW);
+						if(CounterX >= 262 && CounterX <= 285)
+							color=color_letter(LTR_D,262, 25, YELLOW);
+						if(CounterX >= 290 && CounterX <= 316)
+							color=color_letter(LTR_R,290, 25, YELLOW);
+						if(CounterX >= 320 && CounterX <= 343)
+							color=color_letter(LTR_A,320, 25, YELLOW);
+						if(CounterX >= 344 && CounterX <= 385)
+							color=color_letter(LTR_W,344, 25, YELLOW);
 					 end
 					 2'b01: //RED WINS
 					 begin
-						if(CounterX >= (x_centers[3]-91) && CounterX <= (x_centers[3]-65))
-							color=color_letter(LTR_R,x_centers[3]-91, 25, RED);
-						if(CounterX >= (x_centers[3]-61) && CounterX <= (x_centers[3]-41))
-							color=color_letter(LTR_E,x_centers[3]-61, 25, RED);
-						if(CounterX >= (x_centers[3]-35) && CounterX <= (x_centers[3]-12))
-							color=color_letter(LTR_D,x_centers[3]-35, 25, RED);
+						if(CounterX >= 229 && CounterX <= 255)
+							color=color_letter(LTR_R,229, 25, RED);
+						if(CounterX >= 259 && CounterX <= 279)
+							color=color_letter(LTR_E,259, 25, RED);
+						if(CounterX >= 285 && CounterX <= 306)
+							color=color_letter(LTR_D,285, 25, RED);
 							
-						if(CounterX >= (x_centers[3]+12) && CounterX <= (x_centers[3]+53))
-							color=color_letter(LTR_W,x_centers[3]+12, 25, RED);
-						if(CounterX >= (x_centers[3]+57) && CounterX <= (x_centers[3]+62))
-							color=color_letter(LTR_I,x_centers[3]+57, 25, RED);
-						if(CounterX >= (x_centers[3]+69) && CounterX <= (x_centers[3]+92))
-							color=color_letter(LTR_N,x_centers[3]+69, 25, RED);
-						if(CounterX >= (x_centers[3]+98) && CounterX <= (x_centers[3]+118))
-							color=color_letter(LTR_S,x_centers[3]+98, 25, RED);
+						if(CounterX >= 332 && CounterX <= 373)
+							color=color_letter(LTR_W,332, 25, RED);
+						if(CounterX >= 377 && CounterX <= 382)
+							color=color_letter(LTR_I,377, 25, RED);
+						if(CounterX >= 389 && CounterX <= 412)
+							color=color_letter(LTR_N,389, 25, RED);
+						if(CounterX >= 418 && CounterX <= 438)
+							color=color_letter(LTR_S,418, 25, RED);
 					 end
 					 2'b10: //BLACK WINS
 					 begin
-						if(CounterX >= (x_centers[3]-135) && CounterX <= (x_centers[3]-112))
-							color=color_letter(LTR_B,x_centers[3]-135, 25, BLACK);
-						if(CounterX >= (x_centers[3]-107) && CounterX <= (x_centers[3]-88))
-							color=color_letter(LTR_L,x_centers[3]-107, 25, BLACK);
-						if(CounterX >= (x_centers[3]-85) && CounterX <= (x_centers[3]-61))
-							color=color_letter(LTR_A,x_centers[3]-85, 25, BLACK);
-						if(CounterX >= (x_centers[3]-57) && CounterX <= (x_centers[3]-37))
-							color=color_letter(LTR_C,x_centers[3]-57, 25, BLACK);
-						if(CounterX >= (x_centers[3]-32) && CounterX <= (x_centers[3]-9))
-							color=color_letter(LTR_K,x_centers[3]-32, 25, BLACK);
+						if(CounterX >= 185 && CounterX <= 208)
+							color=color_letter(LTR_B,185, 25, BLACK);
+						if(CounterX >= 213 && CounterX <= 232)
+							color=color_letter(LTR_L,213, 25, BLACK);
+						if(CounterX >= 235 && CounterX <= 259)
+							color=color_letter(LTR_A,235, 25, BLACK);
+						if(CounterX >= 263 && CounterX <= 283)
+							color=color_letter(LTR_C,263, 25, BLACK);
+						if(CounterX >= 288 && CounterX <= 311)
+							color=color_letter(LTR_K,288, 25, BLACK);
 						
 						
-						if(CounterX >= (x_centers[3]+12) && CounterX <= (x_centers[3]+53))
-							color=color_letter(LTR_W,x_centers[3]+12, 25, BLACK);
-						if(CounterX >= (x_centers[3]+57) && CounterX <= (x_centers[3]+62))
-							color=color_letter(LTR_I,x_centers[3]+57, 25, BLACK);
-						if(CounterX >= (x_centers[3]+69) && CounterX <= (x_centers[3]+92))
-							color=color_letter(LTR_N,x_centers[3]+69, 25, BLACK);
-						if(CounterX >= (x_centers[3]+98) && CounterX <= (x_centers[3]+118))
-							color=color_letter(LTR_S,x_centers[3]+98, 25, BLACK);
+						if(CounterX >= 332 && CounterX <= 373)
+							color=color_letter(LTR_W,332, 25, BLACK);
+						if(CounterX >= 377 && CounterX <= 382)
+							color=color_letter(LTR_I,377, 25, BLACK);
+						if(CounterX >= 389 && CounterX <= 412)
+							color=color_letter(LTR_N,389, 25, BLACK);
+						if(CounterX >= 418 && CounterX <= 438)
+							color=color_letter(LTR_S,418, 25, BLACK);
 					 end
 					 endcase
 				end
@@ -389,8 +389,8 @@ module vga_display (
 				RED:
 				begin
 					VGA_Red0 <= 1'b0;
-					VGA_Red1 <= 1'b1 & inDisplayArea;
-					VGA_Red2 <= 1'b1 & inDisplayArea;
+					VGA_Red1 <= inDisplayArea;
+					VGA_Red2 <= inDisplayArea;
 					VGA_Green0 <= 1'b0;
 					VGA_Green1 <= 1'b0;
 					VGA_Green2 <= 1'b0;
@@ -410,23 +410,23 @@ module vga_display (
 				end
 				WHITE:
 				begin
-					VGA_Red0 <= 1'b1 & inDisplayArea;
-					VGA_Red1 <= 1'b1 & inDisplayArea;
-					VGA_Red2 <= 1'b1 & inDisplayArea;
-					VGA_Green0 <= 1'b1 & inDisplayArea;
-					VGA_Green1 <= 1'b1 & inDisplayArea;
-					VGA_Green2 <= 1'b1 & inDisplayArea;
-					VGA_Blue0 <= 1'b1 & inDisplayArea;
-					VGA_Blue1 <= 1'b1 & inDisplayArea;
+					VGA_Red0 <= inDisplayArea;
+					VGA_Red1 <= inDisplayArea;
+					VGA_Red2 <= inDisplayArea;
+					VGA_Green0 <= inDisplayArea;
+					VGA_Green1 <= inDisplayArea;
+					VGA_Green2 <= inDisplayArea;
+					VGA_Blue0 <= inDisplayArea;
+					VGA_Blue1 <= inDisplayArea;
 				end
 				YELLOW:
 				begin
-					VGA_Red0 <= 1'b1 & inDisplayArea;
-					VGA_Red1 <= 1'b0;
-					VGA_Red2 <= 1'b1 & inDisplayArea;
-					VGA_Green0 <= 1'b1 & inDisplayArea;
-					VGA_Green1 <= 1'b0;
-					VGA_Green2 <= 1'b1 & inDisplayArea;
+					VGA_Red0 <= 1'b0;
+					VGA_Red1 <= inDisplayArea;
+					VGA_Red2 <= inDisplayArea;
+					VGA_Green0 <= 1'b0;
+					VGA_Green1 <= inDisplayArea;
+					VGA_Green2 <= inDisplayArea;
 					VGA_Blue0 <= 1'b0;
 					VGA_Blue1 <= 1'b0;
 				end
