@@ -424,8 +424,8 @@ module vga_display (
 					VGA_Red0 <= 1'b0;
 					VGA_Red1 <= inDisplayArea;
 					VGA_Red2 <= inDisplayArea;
-					VGA_Green0 <= inDisplayArea;
-					VGA_Green1 <= 1'b0;
+					VGA_Green0 <= 1'b0;
+					VGA_Green1 <= inDisplayArea;
 					VGA_Green2 <= inDisplayArea;
 					VGA_Blue0 <= 1'b0;
 					VGA_Blue1 <= 1'b0;

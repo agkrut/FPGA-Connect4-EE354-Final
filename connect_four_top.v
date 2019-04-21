@@ -86,7 +86,7 @@ module connect_four_top (
     /*
     Create connect four module
     */
-    assign game_clk = DIV_CLK[25];
+    assign game_clk = DIV_CLK[24];
     assign Reset = BtnC;
     connect_four connect_four_mod(
         .Clk(game_clk), .Reset(Reset),
