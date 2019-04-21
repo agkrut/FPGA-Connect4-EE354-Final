@@ -77,3 +77,12 @@ NET "VGA_Blue1" LOC = T7 | IOSTANDARD = LVCMOS33; # Bank = 2, pin name = IO_L46N
 
 NET "VGA_Hsync" LOC = N6 | IOSTANDARD = LVCMOS33; # Bank = 2, pin name = IO_L47P, Sch name = HSYNC
 NET "VGA_Vsync" LOC = P7 | IOSTANDARD = LVCMOS33; # Bank = 2, pin name = IO_L47N, Sch name = VSYNC
+
+## Controllers
+Net "JA_0" LOC = T12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19P, Sch name = JA1
+Net "JA_1" LOC = V12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19N, Sch name = JA2  
+Net "JA_2" LOC = N10 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L20P, Sch name = JA3
+
+Net "JB_0" LOC = K2 | IOSTANDARD = LVCMOS33; #Bank = 3, pin name = IO_L38P_M3DQ2, Sch name = JB1
+Net "JB_1" LOC = K1 | IOSTANDARD = LVCMOS33; #Bank = 3, pin name = IO_L38N_M3DQ3, Sch name = JB2
+Net "JB_2" LOC = L4 | IOSTANDARD = LVCMOS33; #Bank = 3, pin name = IO_L39P_M3LDQS, Sch name = JB3

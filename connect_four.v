@@ -1,11 +1,14 @@
 `timescale 1ns / 1ps
 module connect_four (
         Clk, Reset,
-        Left, Right, Select, Start,
+        Left1, Right1, Drop1, Start1,
+		  Left2, Right2, Drop2, Start2,
         board, colors, selected_col, player, game_over, winner,
 		start_state, end_state
     );
-    input Clk, Reset, Left, Right, Select, Start;
+    input Clk, Reset;
+	 input Left1, Right1, Drop1, Start1;
+	 input Left2, Right2, Drop2, Start2;
     output [41:0] board, colors;
     output [2:0] selected_col;
 	output player, game_over;
@@ -36,10 +39,11 @@ module connect_four (
     localparam
     INITIAL     = 3'b000,
 	 START 	    = 3'b001,
-    MOVE        = 3'b010,
-    CHECK_MOVE  = 3'b011,
-    CHECK_C4    = 3'b100,
-    END         = 3'b101;
+    MOVE1       = 3'b010,
+	 MOVE2       = 3'b011,
+    CHECK_MOVE  = 3'b100,
+    CHECK_C4    = 3'b101,
+    END         = 3'b110;
 
 	assign start_state = (state==START);
 	assign end_state = (state==END);
@@ -66,18 +70,30 @@ module connect_four (
 				end
 				START :
 				begin
-					if(Start)
-						state <= MOVE;
+					if(Start1 | Drop1)
+						state <= MOVE1;
 				end
-				MOVE :
+				MOVE1 :
 				begin
-				  if(Select)
+				  if(Drop1)
 						state <= CHECK_MOVE;
 				  else
 				  begin
-						if(Left & !Right & (selected_col > 0))
+						if(Left1 & !Right1 & (selected_col > 0))
 							 selected_col <= selected_col - 1'b1;
-						if(Right & !Left & (selected_col < 6))
+						if(Right1 & !Left1 & (selected_col < 6))
+							 selected_col <= selected_col + 1'b1;
+				  end
+				end
+				MOVE2 :
+				begin
+				  if(Drop2)
+						state <= CHECK_MOVE;
+				  else
+				  begin
+						if(Left2 & !Right2 & (selected_col > 0))
+							 selected_col <= selected_col - 1'b1;
+						if(Right2 & !Left2 & (selected_col < 6))
 							 selected_col <= selected_col + 1'b1;
 				  end
 				end
@@ -92,7 +108,12 @@ module connect_four (
 							 colors[7*col_depth[selected_col*3 +: 3]+selected_col] <= 1;
 				  end
 				  else
-						state <= MOVE;
+				  begin
+					if(player)
+						state <= MOVE2;
+					else
+						state <= MOVE1;
+					end
 				end
 				CHECK_C4 :
 				begin
@@ -202,7 +223,12 @@ module connect_four (
 							 winner <= 2'b00;
 						end
 						else begin
-							 state <= MOVE;
+							 begin
+							if(player)
+								state <= MOVE1;
+							else
+								state <= MOVE2;
+							end
 							 player <= player ^ 1'b1;
 							 selected_col <= 3;
 						end
@@ -210,7 +236,8 @@ module connect_four (
 				 end
 				 END :
 				 begin
-				 
+					if(Start1 | Start2)
+						state <= INITIAL;
 				 end
           endcase
         end
