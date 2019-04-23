@@ -10,14 +10,13 @@ module snes_controller(
 				output clk_snes,
 				output [5:0] snes_state
 				);
-							  //LATCH______CLOCK_____FINISH____IDLE______STATE
+			  //LATCH______CLOCK_____FINISH____IDLE______STATE
 localparam   IDLE  =  10'b0_____________1_________0________1______000001;
 localparam   STATE1=  10'b1_____________1_________0________0______000011;
 localparam   STATE2=  10'b0_____________1_________0________0______000111;
 localparam   STATE3=  10'b0_____________0_________0________0______001111;
 localparam   STATE4=  10'b0_____________1_________0________0______011111;
 localparam   FINISH=  10'b0_____________1_________1________0______111111;
-							//numero de clocks del relog base de 50 Mhz
 localparam   TIME6u	= 10'd300;
 localparam   TIME12u	= 10'd600;
 
